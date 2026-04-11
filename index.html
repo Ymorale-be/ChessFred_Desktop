@@ -239,6 +239,11 @@ textarea#pgn-input:focus{outline:none;border-color:var(--gold);}
 <div class="screen" id="robot">
   <div class="topbar">
     <span class="topbar-title">🤖 Contre le robot</span>
+    <div style="display:flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;">
+      <div class="turn-dot white-turn" id="turn-dot-robot"></div>
+      <span id="turn-text-robot" style="font-size:.8rem;">Blancs jouent</span>
+      <span id="status-msg-robot" style="font-size:.72rem;color:#ff9955;font-style:italic;"></span>
+    </div>
     <button class="topbar-btn" onclick="showScreen('home')">🏠 Accueil</button>
   </div>
   <div class="game-layout">
@@ -311,12 +316,6 @@ textarea#pgn-input:focus{outline:none;border-color:var(--gold);}
     </div>
     <!-- BOARD -->
     <div class="board-col">
-      <!-- Tour + statut au dessus de l'échiquier -->
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:5px 10px;">
-        <div class="turn-dot white-turn" id="turn-dot-robot"></div>
-        <span id="turn-text-robot" style="font-size:.85rem;font-weight:600;">Blancs jouent</span>
-        <span id="status-msg-robot" style="font-size:.75rem;color:#ff9955;font-style:italic;"></span>
-      </div>
       <div class="board-outer" id="board-outer-robot">
         <div id="coord-ranks-robot" class="coord-ranks"></div>
         <div id="board-robot" class="board"></div>
@@ -338,6 +337,11 @@ textarea#pgn-input:focus{outline:none;border-color:var(--gold);}
 <div class="screen" id="online">
   <div class="topbar">
     <span class="topbar-title">🌐 Partie en ligne</span>
+    <div style="display:flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;">
+      <div class="turn-dot white-turn" id="turn-dot-online"></div>
+      <span id="turn-text-online" style="font-size:.8rem;">Blancs jouent</span>
+      <span id="status-msg-online" style="font-size:.72rem;color:#ff9955;font-style:italic;"></span>
+    </div>
     <button class="topbar-btn" onclick="showScreen('home')">🏠 Accueil</button>
   </div>
   <div class="game-layout">
@@ -404,11 +408,6 @@ textarea#pgn-input:focus{outline:none;border-color:var(--gold);}
     </div>
     <!-- BOARD -->
     <div class="board-col">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:5px 10px;">
-        <div class="turn-dot white-turn" id="turn-dot-online"></div>
-        <span id="turn-text-online" style="font-size:.85rem;font-weight:600;">Blancs jouent</span>
-        <span id="status-msg-online" style="font-size:.75rem;color:#ff9955;font-style:italic;"></span>
-      </div>
       <div class="board-outer" id="board-outer-online">
         <div id="coord-ranks-online" class="coord-ranks"></div>
         <div id="board-online" class="board"></div>
@@ -430,6 +429,11 @@ textarea#pgn-input:focus{outline:none;border-color:var(--gold);}
 <div class="screen" id="analyse">
   <div class="topbar">
     <span class="topbar-title">🔬 Analyse</span>
+    <div style="display:flex;align-items:center;gap:6px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;">
+      <div class="turn-dot white-turn" id="turn-dot-analyse"></div>
+      <span id="turn-text-analyse" style="font-size:.8rem;">Blancs jouent</span>
+      <span id="status-msg-analyse" style="font-size:.72rem;color:#ff9955;font-style:italic;"></span>
+    </div>
     <button class="topbar-btn" onclick="showScreen('home')">🏠 Accueil</button>
   </div>
   <div class="game-layout">
@@ -474,11 +478,6 @@ textarea#pgn-input:focus{outline:none;border-color:var(--gold);}
     </div>
     <!-- BOARD -->
     <div class="board-col">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:5px 10px;">
-        <div class="turn-dot white-turn" id="turn-dot-analyse"></div>
-        <span id="turn-text-analyse" style="font-size:.85rem;font-weight:600;">Blancs jouent</span>
-        <span id="status-msg-analyse" style="font-size:.75rem;color:#ff9955;font-style:italic;"></span>
-      </div>
       <div class="board-outer" id="board-outer-analyse">
         <div id="coord-ranks-analyse" class="coord-ranks"></div>
         <div id="board-analyse" class="board"></div>
