@@ -2515,46 +2515,59 @@ function entrDemo(){
       entrDemoRunning=false;
       return;
     }
-    // Jouer un coup Stockfish pour le camp actuel
     entrStockfishPending=true;
+    let fen=entrBoardToFen(entrBoard,entrTurn);
+    let uciMove=null;
+
+    // Essai 1 : Lichess cloud eval
     try{
-      let fen=entrBoardToFen(entrBoard,entrTurn);
       let res=await fetch(`https://lichess.org/api/cloud-eval?fen=${encodeURIComponent(fen)}&multiPv=1`,
-        {signal:AbortSignal.timeout(15000)});
-      let moved=false;
+        {signal:AbortSignal.timeout(10000)});
       if(res.ok){
         let data=await res.json();
         let pv=data.pvs&&data.pvs[0]&&data.pvs[0].moves;
-        if(pv){
-          let uci=pv.split(" ")[0];
-          let fc="abcdefgh",fr="87654321";
-          let c1=fc.indexOf(uci[0]),r1=fr.indexOf(uci[1]);
-          let c2=fc.indexOf(uci[2]),r2=fr.indexOf(uci[3]);
-          if(c1>=0&&r1>=0){entrStockfishPending=false;playEntrMove(r1,c1,r2,c2);moved=true;}
-        }
+        if(pv)uciMove=pv.split(" ")[0];
       }
-      if(!moved){
-        // Fallback local
-        let moves=withEntrBoard(()=>getAllMoves(entrTurn));
-        if(moves.length){
-          let sf=new Worker("https://cdn.jsdelivr.net/npm/stockfish.js@10.0.2/stockfish.js");
-          let bm=null;
-          await new Promise((res,rej)=>{
-            let t=setTimeout(()=>{sf.terminate();rej();},8000);
-            sf.onmessage=e=>{if(e.data.startsWith("bestmove")){bm=e.data.split(" ")[1];clearTimeout(t);sf.terminate();res();}};
-            sf.postMessage("uci");sf.postMessage("position fen "+fen);sf.postMessage("go depth 18");
-          }).catch(()=>{});
-          if(bm&&bm!=="(none)"){
-            let fc="abcdefgh",fr="87654321";
-            entrStockfishPending=false;
-            playEntrMove(fr.indexOf(bm[1]),fc.indexOf(bm[0]),fr.indexOf(bm[3]),fc.indexOf(bm[2]));
-          }
-        }
+    }catch(e){}
+
+    // Essai 2 : stockfish.js local
+    if(!uciMove){
+      try{
+        let sf=new Worker("https://cdn.jsdelivr.net/npm/stockfish.js@10.0.2/stockfish.js");
+        await new Promise((res,rej)=>{
+          let t=setTimeout(()=>{sf.terminate();rej();},10000);
+          sf.onmessage=e=>{
+            if(e.data.startsWith("bestmove")){
+              let bm=e.data.split(" ")[1];
+              if(bm&&bm!=="(none)")uciMove=bm;
+              clearTimeout(t);sf.terminate();res();
+            }
+          };
+          sf.postMessage("uci");
+          sf.postMessage("position fen "+fen);
+          sf.postMessage("go movetime 3000");
+        }).catch(()=>{});
+      }catch(e){}
+    }
+
+    entrStockfishPending=false;
+
+    if(uciMove&&uciMove.length>=4){
+      const fc="abcdefgh",fr="87654321";
+      let c1=fc.indexOf(uciMove[0]),r1=fr.indexOf(uciMove[1]);
+      let c2=fc.indexOf(uciMove[2]),r2=fr.indexOf(uciMove[3]);
+      if(c1>=0&&r1>=0&&c2>=0&&r2>=0){
+        playEntrMove(r1,c1,r2,c2);
       }
-    }catch(e){entrStockfishPending=false;}
+    } else {
+      // Aucun coup trouvé
+      entrDemoRunning=false;
+      entrPlayerColor=savedColor;
+      return;
+    }
 
     if(!entrDone&&entrDemoRunning){
-      setTimeout(demoStep,3000);
+      setTimeout(demoStep,3500); // pause de 3.5s après le coup pour que l'utilisateur suive
     } else {
       entrPlayerColor=savedColor;
       entrDemoRunning=false;
